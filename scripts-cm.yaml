@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: scripts-cm
+data:
+  locustfile.py: |
+    from locust import HttpUser, between, task, tag
+    
+    APIM_TEST_TOKEN = "24a5c9b1-9ce6-45fe-998e-b9ac1b2d7971"
+
+    X_APIM_SESSION_TOKEN = "24a5c9b1-9ce6-45fe-998e-b9ac1b2d7971"
+
+    OCP_APIM_SUBSCRIPTION_KEY = "65fab861-baad-11ea-ae24-6d12723d9004"
+    
+    def auth_header():
+        return {"ocp-apim-session-token": APIM_TEST_TOKEN}
+
+    def auth_header_2():
+        return {"x-apim-session-token":  X_APIM_SESSION_TOKEN}
+    
+    def auth_header_3():
+        return {"ocp-apim-subscription-key":  OCP_APIM_SUBSCRIPTION_KEY}
+    
+
+    class WebsiteUser(HttpUser):
+
+        wait_time = between(3,5)
+        
+        @tag('tag1')
+        @task(1)
+        def readmission0(self):
+            r = self.client.request(method="GET", url='//api/default_period?hospital=JBN', headers=auth_header())
+            assert r.status_code == 200
+        
+        @tag('tag1')
+        @task(1)
+        def readmission1(self):
+            r=self.client.request(method="GET", url='/api/hospital_readmission_rate?hospital=JBN&frequency=Monthly&unplanned=true&govdata=true&fromDate=2018-11-01&toDate=2019-10-31', headers=auth_header())
+            assert r.status_code == 200
+        
+        @tag('tag1')
+        @task(1)
+        def readmission2(self):
+            r=self.client.request(method="GET", url='/api/hospital_percent_readmit_diagnosis?hospital=JBN&frequency=Monthly&unplanned=true&fromDate=2018-11-01&toDate=2019-10-31', headers=auth_header())
+            assert r.status_code == 200
+
+        @tag('tag1')
+        @task(1) 
+        def readmission3(self):
+            r=self.client.request(method="GET", url='/api/percent_sections?hospital=JBN&frequency=Monthly&unplanned=true&fromDate=2018-11-01&toDate=2019-10-31', headers=auth_header())
+            assert r.status_code == 200
+ 
+        @tag('tag1')   
+        @task(1) 
+        def readmission4(self):
+            r=self.client.request(method="GET", url='/api/readmission_rate?hospital=JBN&section=AC&frequency=Monthly&unplanned=true&govdata=true&fromDate=2018-11-01&toDate=2019-10-31', headers=auth_header())
+            assert r.status_code == 200
+
+        @tag('tag1')
+        @task(1)
+        def readmission5(self):
+            r=self.client.request(method="GET", url='/api/percent_readmit_diagnosis?hospital=JBN&section=AC&frequency=Monthly&fromDate=2018-11-01&toDate=2019-10-31', headers=auth_header())
+            assert r.status_code == 200
+    
+        @tag('tag1')
+        @task(1)
+        def readmission6(self):
+            r=self.client.request(method="GET", url='/api/percent_age_group?hospital=JBN&section=AC&frequency=Monthly&fromDate=2018-11-01&toDate=2019-10-31', headers=auth_header())
+            assert r.status_code == 200
+
+        @tag('tag1')
+        @task(1)
+        def readmission7(self):
+            r=self.client.request(method="GET", url='/api/risk_patients_details?hospital=JBN&section=AC&frequency=Monthly&fromDate=2018-11-01&toDate=2019-10-31&pageStart=0&pageEnd=10', headers=auth_header())
+            assert r.status_code == 200
+
+        @tag('tag2')
+        @task(1)
+        def readmission8(self):
+            r=self.client.request(method="GET", url="https://aics-medical-bi-stage.azurewebsites.net/api/v1/dashboard/pbi", headers=auth_header_2(), name="https://aics-medical-bi-stage.azurewebsites.net/api/v1/dashboard/pbi")
+            assert r.status_code == 200
+
+        @tag('tag2')
+        @task(1)
+        def readmission9(self):
+            r=self.client.request(method="GET", url="https://aics-medical-bi-stage.azurewebsites.net/api/v1/dashboard/pbi/e7a4e83c-a8be-44e8-991e-66b910186759", headers=auth_header_2(), name="https://aics-medical-bi-stage.azurewebsites.net/api/v1/dashboard/pbi/e7a4e83c-a8be-44e8-991e-66b910186759")
+            assert r.status_code == 200    
+
+        @tag('tag3')
+        @task(1)
+        def readmission10(self):
+            r=self.client.request(method="GET", url="https://fr-jbo-stage.southeastasia.cloudapp.azure.com/hello", headers=auth_header_3(), name="https://fr-jbo-stage.southeastasia.cloudapp.azure.com/hello")
+            assert r.status_code == 200  
+
+        @tag('tag3')
+        @task(1)
+        def readmission11(self):
+            r=self.client.request(method="GET", url="https://fr-jbo-stage.southeastasia.cloudapp.azure.com/verify/target/gets", headers=auth_header_3(), name="https://fr-jbo-stage.southeastasia.cloudapp.azure.com/verify/target/gets")
+            assert r.status_code == 200
+            
+        @tag('tag3')
+        @task(1)
+        def readmission12(self):
+            r=self.client.request(method="GET", url="https://fr-jbo-stage.southeastasia.cloudapp.azure.com/verify/target/query?dbName=azure_stage", headers=auth_header_3(), name="https://fr-jbo-stage.southeastasia.cloudapp.azure.com/verify/target/query?dbName=azure_stage")
+            assert r.status_code == 200  
+
+
