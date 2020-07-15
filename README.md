@@ -29,7 +29,8 @@ kubectl get ingress
 ```
 Then go to this IP you could see the Locust Web UI and set the **number of users** & **ramp rate** to start your test. 
 
-![](https://i.imgur.com/2Hwp2O3.png)
+![](https://i.imgur.com/iwDxobl.png)
+
 
 
 ### Usage
